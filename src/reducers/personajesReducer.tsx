@@ -3,8 +3,8 @@ import { Personaje } from "../interfaces/interface";
 
 interface InitialState {
   personajes: Personaje[];
-  prev: string;
-  next: string;
+  prev: string | null;
+  next: string | null;
 }
 
 const initialState: InitialState = {

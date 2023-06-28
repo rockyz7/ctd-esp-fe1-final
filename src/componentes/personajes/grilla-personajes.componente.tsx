@@ -18,28 +18,22 @@ import {
  * @returns un JSX element
  */
 
-const GrillaPersonajes = () => {
+interface Props {
+  personajes: Personaje[];
+}
+
+const GrillaPersonajes = ({ personajes }: Props) => {
   const dispatch = useAppDispatch();
 
-  const { personajes } = useAppSelector((state) => state.personajes);
+  //   const { personajes } = useAppSelector((state) => state.personajes);
   //   const { page } = useAppSelector((state) => state.personajes);
-
-  useEffect(() => {
-    fetch(`https://rickandmortyapi.com/api/character`)
-      .then((resp) => resp.json())
-      .then((data) => {
-        dispatch(getCharacters(data.results));
-        dispatch(nextPage(data.info.next));
-        dispatch(prevPage(data.info.prev));
-      });
-  }, []);
 
   const characters: Personaje[] = personajes ?? [];
 
   return (
     <div className="grilla-personajes">
       {characters.map((ch) => {
-        return <TarjetaPersonaje character={ch} />;
+        return <TarjetaPersonaje key={ch.id} character={ch} />;
       })}
     </div>
   );

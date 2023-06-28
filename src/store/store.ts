@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { personajesReducer } from "../reducers/personajesReducer";
+import { favoritosReducer } from "../reducers/favoritosReducer";
 
 export const store = configureStore({
   reducer: {
     personajes: personajesReducer.reducer,
+    favoritos: favoritosReducer.reducer,
   },
 });
 
