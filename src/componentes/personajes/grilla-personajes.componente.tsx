@@ -24,11 +24,13 @@ interface Props {
 
 const GrillaPersonajes = ({ personajes }: Props) => {
   const dispatch = useAppDispatch();
-
-  //   const { personajes } = useAppSelector((state) => state.personajes);
-  //   const { page } = useAppSelector((state) => state.personajes);
-
+  const { status } = useAppSelector((state) => state.personajes);
   const characters: Personaje[] = personajes ?? [];
+
+  if (status === "LOADING") return <div>Cargando personajes...</div>;
+  if (status === "FAILED") return <div>No se pudo cargar los personajes.</div>;
+  if (!personajes || personajes.length === 0)
+    return <>No se encontraron resultados.</>;
 
   return (
     <div className="grilla-personajes">

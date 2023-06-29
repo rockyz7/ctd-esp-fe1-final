@@ -1,6 +1,7 @@
 import { ChangeEvent } from "react";
 import "./filtros.css";
 import {
+  fetchPersonajeThunk,
   getCharacters,
   nextPage,
   prevPage,
@@ -9,14 +10,10 @@ import { useAppDispatch } from "../../store/hooks";
 
 const Filtros = () => {
   const dispatch = useAppDispatch();
+
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    fetch(`https://rickandmortyapi.com/api/character/?name=${e.target.value}`)
-      .then((data) => data.json())
-      .then((data) => {
-        dispatch(getCharacters(data.results));
-        dispatch(nextPage(data.info.next));
-        dispatch(prevPage(data.info.prev));
-      });
+    const name = e.target.value;
+    dispatch(fetchPersonajeThunk(name));
   };
 
   return (
