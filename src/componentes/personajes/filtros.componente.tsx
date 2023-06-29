@@ -2,18 +2,23 @@ import { ChangeEvent } from "react";
 import "./filtros.css";
 import {
   fetchPersonajeThunk,
-  getCharacters,
-  nextPage,
-  prevPage,
+  manejarFiltro,
 } from "../../reducers/personajesReducer";
-import { useAppDispatch } from "../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 const Filtros = () => {
   const dispatch = useAppDispatch();
+  const { nombre } = useAppSelector((state) => state.personajes);
+
+  /**
+   * Esta función guarda el valor del input en una variable que luego se usa como parámetro para hacer el llamado a la API con el filtro
+   * necesario por medio de Thunk. También guarda el valor del input en el estado del slice de Personajes.
+   */
 
   const onChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
+    const name: string = e.target.value;
     dispatch(fetchPersonajeThunk(name));
+    dispatch(manejarFiltro(e.target.value));
   };
 
   return (
@@ -24,6 +29,7 @@ const Filtros = () => {
         placeholder="Rick, Morty, Beth, Alien, ...etc"
         name="nombre"
         onChange={onChange}
+        value={nombre}
       />
     </div>
   );

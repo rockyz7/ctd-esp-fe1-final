@@ -1,12 +1,17 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Personaje } from "../interfaces/interface";
-import { buscarPersonaje } from "../services/personaje.services";
+import { APIResponse, Personaje, errorLlamada } from "../interfaces/interface";
+import {
+  buscarPersonaje,
+  cambiarDePersonajeNext,
+  cambiarDePersonajePrev,
+} from "../services/personaje.services";
 
 interface InitialState {
   status: "IDLE" | "LOADING" | "COMPLETED" | "FAILED";
   personajes: Personaje[];
   prev: string | null;
   next: string | null;
+  nombre: string;
 }
 
 const initialState: InitialState = {
@@ -14,16 +19,41 @@ const initialState: InitialState = {
   personajes: [],
   prev: "",
   next: "",
+  nombre: "",
 };
 
 export const fetchPersonajeThunk = createAsyncThunk(
   "personaje/fetchThunk",
   async (name: string) => {
     try {
-      const personajes: Personaje[] = await buscarPersonaje(name);
+      const personajes: APIResponse = await buscarPersonaje(name);
       return personajes;
     } catch (e) {
-      return e;
+      return errorLlamada;
+    }
+  }
+);
+
+export const fetchCambiarPersonajesThunkNext = createAsyncThunk(
+  "personajesSiguiente/fetchThunk",
+  async (string: string | null) => {
+    try {
+      const personajes: APIResponse = await cambiarDePersonajeNext(string);
+      return personajes;
+    } catch (e) {
+      return errorLlamada;
+    }
+  }
+);
+
+export const fetchCambiarPersonajesThunkPrev = createAsyncThunk(
+  "personajesAnterior/fetchThunk",
+  async (string: string | null) => {
+    try {
+      const personajes: APIResponse = await cambiarDePersonajePrev(string);
+      return personajes;
+    } catch (e) {
+      return errorLlamada;
     }
   }
 );
@@ -32,14 +62,13 @@ export const personajesReducer = createSlice({
   name: "personajes",
   initialState,
   reducers: {
-    nextPage: (state, action) => {
-      state.next = action.payload;
+    getCharacters: (state, action: PayloadAction<APIResponse>) => {
+      state.personajes = action.payload.results;
+      state.prev = action.payload.info.prev;
+      state.next = action.payload.info.next;
     },
-    prevPage: (state, action) => {
-      state.prev = action.payload;
-    },
-    getCharacters: (state, action) => {
-      state.personajes = action.payload;
+    manejarFiltro: (state, action: PayloadAction<string>) => {
+      state.nombre = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -49,7 +78,7 @@ export const personajesReducer = createSlice({
       })
       .addCase(
         fetchPersonajeThunk.fulfilled,
-        (state, action: PayloadAction<Personaje[] | any>) => {
+        (state, action: PayloadAction<APIResponse>) => {
           state.status = "COMPLETED";
           if (action.payload.results) {
             state.personajes = action.payload.results;
@@ -62,13 +91,42 @@ export const personajesReducer = createSlice({
           }
         }
       )
+      .addCase(fetchPersonajeThunk.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      .addCase(fetchCambiarPersonajesThunkNext.pending, (state) => {
+        state.status = "LOADING";
+      })
       .addCase(
-        fetchPersonajeThunk.rejected,
-        (state, action: PayloadAction<Personaje[] | any>) => {
-          state.status = "FAILED";
+        fetchCambiarPersonajesThunkNext.fulfilled,
+        (state, action: PayloadAction<APIResponse>) => {
+          state.status = "COMPLETED";
+
+          state.personajes = action.payload.results;
+          state.prev = action.payload.info.prev;
+          state.next = action.payload.info.next;
         }
-      );
+      )
+      .addCase(fetchCambiarPersonajesThunkNext.rejected, (state) => {
+        state.status = "FAILED";
+      })
+      .addCase(fetchCambiarPersonajesThunkPrev.pending, (state) => {
+        state.status = "LOADING";
+      })
+      .addCase(
+        fetchCambiarPersonajesThunkPrev.fulfilled,
+        (state, action: PayloadAction<APIResponse>) => {
+          state.status = "COMPLETED";
+
+          state.personajes = action.payload.results;
+          state.prev = action.payload.info.prev;
+          state.next = action.payload.info.next;
+        }
+      )
+      .addCase(fetchCambiarPersonajesThunkPrev.rejected, (state) => {
+        state.status = "FAILED";
+      });
   },
 });
 
-export const { nextPage, prevPage, getCharacters } = personajesReducer.actions;
+export const { getCharacters, manejarFiltro } = personajesReducer.actions;

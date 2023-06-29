@@ -14,7 +14,9 @@ interface Props {
 }
 
 const BotonFavorito = ({ esFavorito, onClick }: Props) => {
-  const src = esFavorito ? "/imagenes/star-filled.png" : "/imagenes/star.png";
+  const src: string = esFavorito
+    ? "/imagenes/star-filled.png"
+    : "/imagenes/star.png";
 
   return (
     <div className="boton-favorito" onClick={onClick}>

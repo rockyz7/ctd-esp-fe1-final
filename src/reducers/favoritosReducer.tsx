@@ -13,13 +13,17 @@ export const favoritosReducer = createSlice({
   name: "favoritos",
   initialState,
   reducers: {
-    addFav: (state, action) => {
+    agregarFavorito: (state, action) => {
       state.favs = action.payload;
     },
-    removeFav: (state, action) => {
+    eliminarFavorito: (state, action) => {
+      state.favs = action.payload;
+    },
+    eliminarTodos: (state, action) => {
       state.favs = action.payload;
     },
   },
 });
 
-export const { addFav, removeFav } = favoritosReducer.actions;
+export const { agregarFavorito, eliminarFavorito, eliminarTodos } =
+  favoritosReducer.actions;

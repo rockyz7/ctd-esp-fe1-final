@@ -1,7 +1,6 @@
 import {
-  getCharacters,
-  nextPage,
-  prevPage,
+  fetchCambiarPersonajesThunkNext,
+  fetchCambiarPersonajesThunkPrev,
 } from "../../reducers/personajesReducer";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import "./paginacion.css";
@@ -18,28 +17,22 @@ const Paginacion = () => {
   const dispatch = useAppDispatch();
   const { next, prev } = useAppSelector((state) => state.personajes);
 
-  const handleNext = () => {
-    if (next !== null) {
-      fetch(next)
-        .then((resp) => resp.json())
-        .then((data) => {
-          dispatch(getCharacters(data.results));
-          dispatch(nextPage(data.info.next));
-          dispatch(prevPage(data.info.prev));
-        });
-    }
+  /**
+   * Esta función usa el dispatch del reducer para ejecutar el Thunk que sirve de intermediario al llamado de la api
+   * que trae los 20 personajes siguientes de la páginación
+   */
+
+  const cambiarPersonajesNext = async () => {
+    dispatch(fetchCambiarPersonajesThunkNext(next));
   };
 
-  const handlePrev = () => {
-    if (prev !== null) {
-      fetch(prev)
-        .then((resp) => resp.json())
-        .then((data) => {
-          dispatch(getCharacters(data.results));
-          dispatch(nextPage(data.info.next));
-          dispatch(prevPage(data.info.prev));
-        });
-    }
+  /**
+   * Esta función usa el dispatch del reducer para ejecutar el Thunk que sirve de intermediario al llamado de la api
+   * que trae los 20 personajes previos de la páginación
+   */
+
+  const cambiarPersonajesPrev = async () => {
+    dispatch(fetchCambiarPersonajesThunkPrev(prev));
   };
 
   return (
@@ -47,14 +40,14 @@ const Paginacion = () => {
       <button
         disabled={prev !== null ? false : true}
         className={"primary"}
-        onClick={handlePrev}
+        onClick={() => cambiarPersonajesPrev()}
       >
         Anterior
       </button>
       <button
         disabled={next !== null ? false : true}
         className={"primary"}
-        onClick={handleNext}
+        onClick={() => cambiarPersonajesNext()}
       >
         Siguiente
       </button>

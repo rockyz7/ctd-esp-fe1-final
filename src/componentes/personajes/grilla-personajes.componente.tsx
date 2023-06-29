@@ -3,11 +3,7 @@ import "./grilla-personajes.css";
 import TarjetaPersonaje from "./tarjeta-personaje.componente";
 import { Personaje } from "../../interfaces/interface";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import {
-  getCharacters,
-  nextPage,
-  prevPage,
-} from "../../reducers/personajesReducer";
+import { getCharacters } from "../../reducers/personajesReducer";
 
 /**
  * Grilla de personajes para la pagina de inicio
@@ -23,7 +19,6 @@ interface Props {
 }
 
 const GrillaPersonajes = ({ personajes }: Props) => {
-  const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.personajes);
   const characters: Personaje[] = personajes ?? [];
 

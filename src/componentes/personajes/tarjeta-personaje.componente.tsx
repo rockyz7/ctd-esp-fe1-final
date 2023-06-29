@@ -1,6 +1,9 @@
 import { log } from "console";
 import { Personaje } from "../../interfaces/interface";
-import { addFav, removeFav } from "../../reducers/favoritosReducer";
+import {
+  agregarFavorito,
+  eliminarFavorito,
+} from "../../reducers/favoritosReducer";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import BotonFavorito from "../botones/boton-favorito.componente";
 import "./tarjeta-personaje.css";
@@ -21,15 +24,21 @@ interface Props {
 const TarjetaPersonaje = ({ character }: Props) => {
   const dispatch = useAppDispatch();
   const { favs } = useAppSelector((state) => state.favoritos);
-  const { personajes } = useAppSelector((state) => state.personajes);
 
-  const handleFav = () => {
+  /**
+   * Esta función corrobora que el favorito que se intenta guardar no esté ya guardado en el state. En caso de que sí, lo elimina mediante el dispatch
+   * correspondiente. De lo contrario lo agrega.
+   */
+
+  const manejarFavoritos = () => {
     if (!favs.find((f) => f.id == character.id)) {
-      const favoritos = [...favs, character];
-      dispatch(addFav(favoritos));
+      const favoritos: Personaje[] = [...favs, character];
+      dispatch(agregarFavorito(favoritos));
     } else {
-      const favo = favs.filter((fav) => fav.id !== character.id);
-      dispatch(removeFav(favo));
+      const favorito: Personaje[] = favs.filter(
+        (fav) => fav.id !== character.id
+      );
+      dispatch(eliminarFavorito(favorito));
     }
   };
 
@@ -40,7 +49,7 @@ const TarjetaPersonaje = ({ character }: Props) => {
         <span>{character.name}</span>
         <BotonFavorito
           esFavorito={favs.find((f) => f.id == character.id) ? true : false}
-          onClick={handleFav}
+          onClick={manejarFavoritos}
         />
       </div>
     </div>
