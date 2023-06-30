@@ -1,22 +1,29 @@
-import './tarjeta-episodio.css';
+import { Episodio } from "../../interfaces/interface";
+import "./tarjeta-episodio.css";
 
 /**
  * Tarjeta para cada episodio dentro de la vista de personaje.
- * 
+ *
  * Deberás agregar las propiedades necesarias para mostrar los datos de los episodios
- * 
- * 
- * @returns un JSX element 
+ *
+ *
+ * @returns un JSX element
  */
-const TarjetaEpisodio = () => {
 
-    return <div className="tarjeta-episodio">
-            <h4>Close Rick-counters of the Rick Kind</h4>
-            <div>
-                <span>S01E01</span>
-                <span>Lanzado el: April 7, 2014</span>
-            </div>
-    </div>
+interface Props {
+  episodio: Episodio;
 }
+
+const TarjetaEpisodio = ({ episodio }: Props) => {
+  return (
+    <div className="tarjeta-episodio">
+      <h4>{episodio.name}</h4>
+      <div>
+        <span>{episodio.episode}</span>
+        <span>Lanzado el: {episodio.air_date}</span>
+      </div>
+    </div>
+  );
+};
 
 export default TarjetaEpisodio;

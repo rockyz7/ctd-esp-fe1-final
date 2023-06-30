@@ -44,3 +44,19 @@ export const errorLlamada = {
   },
   results: [],
 };
+
+export interface Detalle {
+  id: number;
+  name: string;
+  gender: string;
+  origin: Origin;
+  image: string;
+  episode: string[];
+}
+
+export interface Episodio {
+  id: number;
+  name: string;
+  air_date: string;
+  episode: string;
+}

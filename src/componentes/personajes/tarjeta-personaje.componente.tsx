@@ -1,4 +1,3 @@
-import { log } from "console";
 import { Personaje } from "../../interfaces/interface";
 import {
   agregarFavorito,
@@ -7,6 +6,13 @@ import {
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import BotonFavorito from "../botones/boton-favorito.componente";
 import "./tarjeta-personaje.css";
+import {
+  fetchEpisodiosThunk,
+  guardarIDEpisodio,
+  guardarPersonaje,
+} from "../../reducers/detalleReducer";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 /**
  * Tarjeta para cada personaje dentro de la grilla de personajes.
@@ -24,7 +30,9 @@ interface Props {
 const TarjetaPersonaje = ({ character }: Props) => {
   const dispatch = useAppDispatch();
   const { favs } = useAppSelector((state) => state.favoritos);
-
+  const { personaje, arrayEpisodios } = useAppSelector(
+    (state) => state.detalles
+  );
   /**
    * Esta función corrobora que el favorito que se intenta guardar no esté ya guardado en el state. En caso de que sí, lo elimina mediante el dispatch
    * correspondiente. De lo contrario lo agrega.
@@ -42,9 +50,19 @@ const TarjetaPersonaje = ({ character }: Props) => {
     }
   };
 
+  const verDetalles = () => {
+    dispatch(guardarPersonaje(character));
+    character.episode.map((ep: string) =>
+      dispatch(guardarIDEpisodio(Number(ep.split("/")[5])))
+    );
+  };
+
   return (
-    <div className="tarjeta-personaje">
-      <img src={character.image} alt={character.name} />
+    <div className="tarjeta-personaje" onClick={verDetalles}>
+      <Link to={"/detalle"}>
+        <img src={character.image} alt={character.name} />
+      </Link>
+
       <div className="tarjeta-personaje-body">
         <span>{character.name}</span>
         <BotonFavorito
