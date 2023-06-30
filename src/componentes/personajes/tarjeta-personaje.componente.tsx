@@ -8,7 +8,6 @@ import BotonFavorito from "../botones/boton-favorito.componente";
 import "./tarjeta-personaje.css";
 import {
   fetchEpisodiosThunk,
-  guardarIDEpisodio,
   guardarPersonaje,
 } from "../../reducers/detalleReducer";
 import { Link } from "react-router-dom";
@@ -52,9 +51,6 @@ const TarjetaPersonaje = ({ character }: Props) => {
 
   const verDetalles = () => {
     dispatch(guardarPersonaje(character));
-    character.episode.map((ep: string) =>
-      dispatch(guardarIDEpisodio(Number(ep.split("/")[5])))
-    );
   };
 
   return (

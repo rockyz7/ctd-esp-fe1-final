@@ -4,11 +4,7 @@ import TarjetaEpisodio from "../componentes/episodios/tarjeta-episodio.component
 import { Personaje } from "../interfaces/interface";
 import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { useEffect } from "react";
-import {
-  fetchEpisodiosThunk,
-  guardarEpisodio,
-  guardarIDEpisodio,
-} from "../reducers/detalleReducer";
+import { fetchEpisodiosThunk } from "../reducers/detalleReducer";
 
 /**
  * Esta es la pagina de detalle. Aqui se puede mostrar la vista sobre el personaje seleccionado junto con la lista de episodios en los que aparece

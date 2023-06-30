@@ -5,7 +5,7 @@ import { traerEpisodios } from "../services/detalle.services";
 interface InitialState {
   status: "IDLE" | "LOADING" | "COMPLETED" | "FAILED";
   personaje: Detalle;
-  arrayEpisodios: number[];
+  arrayEpisodios: string[];
   episodio: Episodio[];
 }
 
@@ -28,7 +28,7 @@ const initialState: InitialState = {
 
 export const fetchEpisodiosThunk = createAsyncThunk(
   "episodios/fetchThunk",
-  async (episodios: number[]) => {
+  async (episodios: string[]) => {
     try {
       const eps: Episodio[] = await traerEpisodios(episodios);
       return eps;
@@ -44,12 +44,7 @@ export const detalleReducer = createSlice({
   reducers: {
     guardarPersonaje: (state, action) => {
       state.personaje = action.payload;
-    },
-    guardarIDEpisodio: (state, action) => {
-      state.arrayEpisodios.push(action.payload);
-    },
-    guardarEpisodio: (state, action) => {
-      state.episodio = action.payload;
+      state.arrayEpisodios = action.payload.episode;
     },
   },
   extraReducers: (builder) => {
@@ -70,5 +65,4 @@ export const detalleReducer = createSlice({
   },
 });
 
-export const { guardarPersonaje, guardarIDEpisodio, guardarEpisodio } =
-  detalleReducer.actions;
+export const { guardarPersonaje } = detalleReducer.actions;
